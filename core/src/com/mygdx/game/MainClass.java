@@ -25,7 +25,7 @@ public class MainClass extends ApplicationAdapter{
 	@Override
 	public void create () {
 		painter = new ShapeRenderer();
-		Gdx.input.setCursorCatched(true);
+		Gdx.input.setCursorCatched(false);
 
 
 		for (int i = 0; i < (999); i++) {
@@ -54,6 +54,36 @@ public class MainClass extends ApplicationAdapter{
 
 		ScreenUtils.clear(1, 0, 0, 1);
 
+		handleInputs();
+
+		displayGrid();
+
+	}
+	
+	@Override
+	public void dispose () {
+
+
+	}
+	public void displayGrid() {
+		painter.setAutoShapeType(true);
+		painter.begin();
+
+		painter.set(ShapeRenderer.ShapeType.Filled);
+
+		for (int i = 0; i < (800 / gridSize); i++) {
+
+			for (int j = 0; j < (800 / gridSize); j++) {
+
+				painter.setColor(grid[i+offsetx][j+offsety].getTexture());
+				painter.rect(i*gridSize,j*gridSize,gridSize,gridSize);
+
+			}
+
+		}
+		painter.end();
+	}
+	public void handleInputs() {
 		if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) Gdx.app.exit();
 		if (Gdx.input.isKeyJustPressed(Input.Keys.L)) Gdx.input.setCursorCatched(!Gdx.input.isCursorCatched());
 
@@ -86,54 +116,6 @@ public class MainClass extends ApplicationAdapter{
 		if (offsety>=2) {
 			if (Gdx.input.isKeyPressed(Input.Keys.S)) offsety-=2;
 		}
-
-
-
-
-
-
-		painter.setAutoShapeType(true);
-		painter.begin();
-
-
-		painter.set(ShapeRenderer.ShapeType.Filled);
-
-		for (int i = 0; i < (800 / gridSize); i++) {
-
-			for (int j = 0; j < (800 / gridSize); j++) {
-
-				painter.setColor(grid[i+offsetx][j+offsety].getTexture());
-				painter.rect(i*gridSize,j*gridSize,gridSize,gridSize);
-				
-
-
-			}
-
-		}
-//		for (int i = 0; i < (800 / gridSize); i++) {
-//			painter.setColor(Color.BLACK);
-//			painter.set(ShapeRenderer.ShapeType.Line);
-//
-//			painter.line(i*gridSize,0,i*gridSize,800);
-//
-//		}
-//		for (int i = 0; i < (800 / gridSize); i++) {
-//			painter.setColor(Color.BLACK);
-//			painter.set(ShapeRenderer.ShapeType.Line);
-//			painter.line(0,i*gridSize,800,i*gridSize);
-//
-//		}
-
-		painter.end();
-
-
-
-	}
-	
-	@Override
-	public void dispose () {
-
-
 	}
 
 

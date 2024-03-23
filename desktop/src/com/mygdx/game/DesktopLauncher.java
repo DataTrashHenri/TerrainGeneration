@@ -1,5 +1,6 @@
 package com.mygdx.game;
 
+import com.badlogic.gdx.Files;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
 import com.mygdx.game.MainClass;
@@ -12,6 +13,7 @@ public class DesktopLauncher {
 		config.useVsync(true);
 		config.setWindowedMode(800,800);
 		config.setResizable(false);
+		config.setWindowIcon(Files.FileType.Internal,"img.png");
 		//config.setFullscreenMode(Lwjgl3ApplicationConfiguration.getDisplayMode());
 		config.setTitle("Terrain");
 
