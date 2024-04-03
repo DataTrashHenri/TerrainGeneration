@@ -5,7 +5,7 @@ import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
 import com.mygdx.game.MainClass;
 
-import java.util.Scanner;
+import java.util.*;
 
 // Please note that on macOS your application needs to be started with the -XstartOnFirstThread JVM argument
 public class DesktopLauncher {
@@ -19,30 +19,45 @@ public class DesktopLauncher {
 		//config.setFullscreenMode(Lwjgl3ApplicationConfiguration.getDisplayMode());
 		config.setTitle("Terrain");
 		handleStartArguments();
-
 		new Lwjgl3Application(new MainClass(), config);
+
 	}
 	public static void handleStartArguments() {
+
 		Scanner scanner = new Scanner(System.in);
 		System.out.println("-- Note, that the world-size must be greater or equal to 160, so that the world can be rendered properly on screen--");
 		System.out.println("Type in here your start arguments :");
 		String input = scanner.nextLine();
-		String[] cmds = input.split("-");
-		if (cmds[0].startsWith("run")) {
-			for (int i = 1; i < cmds.length; i++) {
-				if (cmds[i].startsWith("seed:")) {
-					MainClass.seedOffset= Integer.parseInt(cmds[i].split(":")[1].split(" ")[0]);
-					System.out.println("Seed set to "+cmds[i].split(":")[1]);
-				} else if (cmds[i].startsWith("wsize:")) {
-					MainClass.worldSize= Integer.parseInt(cmds[i].split(":")[1]);
-					System.out.println("Worldsize set to "+cmds[i].split(":")[1].split(" ")[0]);
-				} else if (cmds[i].startsWith("default")) {
+		String[] splittedArguments = (input.split("-"));
+
+
+		if (splittedArguments[0].startsWith("run")) {
+			String operating;
+			for (int i = 1; i < splittedArguments.length; i++) {
+				if (splittedArguments[i].startsWith("seed::")) {
+					operating = splittedArguments[i].split("::")[1];
+					if (operating.split(" ")[0].equals("random")) {
+						MainClass.seedOffset= new Random().nextInt(0,100000);
+					} else {
+						MainClass.seedOffset= Integer.parseInt(operating.split(" ")[0]);
+					}
+					System.out.println("Seed set to "+MainClass.seedOffset);
+				} else if (splittedArguments[i].startsWith("wsize::")) {
+					operating = splittedArguments[i].split("::")[1];
+					MainClass.worldSize= Integer.parseInt(operating);
+					System.out.println("Worldsize set to "+operating.split(" ")[0]);
+				} else if (splittedArguments[i].startsWith("default")) {
 					System.out.println("Launching with default values");
 					break;
 				}
 			}
-		} else if (cmds[0].startsWith("exit")) {
+		} else if (splittedArguments[0].startsWith("exit")) {
 			System.exit(0);
+		}
+		else {
+			System.out.println("You input could not be validated. This run will be terminated");
+			System.exit(0);
+
 		}
 	}
 }
