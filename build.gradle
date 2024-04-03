@@ -1,11 +1,13 @@
 buildscript {
-    
+
+
 
     repositories {
         mavenLocal()
         mavenCentral()
         gradlePluginPortal()
         maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
+
         google()
     }
     dependencies {
@@ -45,6 +47,7 @@ project(":desktop") {
 
     dependencies {
         implementation project(":core")
+        implementation "com.badlogicgames.gdx:gdx-freetype:$gdxVersion"
         api "com.badlogicgames.gdx:gdx-backend-lwjgl3:$gdxVersion"
         api "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
         

@@ -4,41 +4,63 @@ import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.utils.ScreenUtils;
 
+
 import java.time.Duration;
+import java.util.Arrays;
 import java.util.Random;
+import java.util.Scanner;
 
 public class MainClass extends ApplicationAdapter{
 	ShapeRenderer painter;
-	long delta=0;
-	int offsetx=50;
-	int offsety=50;
+
+	int offsetx=0;
+	int offsety=0;
 	Random rnd = new Random();
 
-	int gridSize=5;
-	//make sure It's dividable with 800
+    private SpriteBatch batch;
+    private BitmapFont font;
 
-	Block[][] grid = new Block[999][999];
+	int gridSize=5;
+	//make sure It is dividable with 805
+
+	Block[][] grid;
+	static int seedOffset=0;
+	static int worldSize=999;
+	boolean readyToStart=false;
 
 	@Override
 	public void create () {
+		//handleStartArguments();
+        grid = new Block[worldSize][worldSize];
+
+
+
+        batch = new SpriteBatch();
+        font = new BitmapFont();
+        font.getData().setScale(8);
+
 		painter = new ShapeRenderer();
 		Gdx.input.setCursorCatched(false);
 
 
-		for (int i = 0; i < (999); i++) {
-			for (int j = 0; j < (999); j++) {
-				if (	   PerlinNoise.perlin((float) i /20, (float) j /20) < -0.2){
+
+
+		for (int i = 0; i < (worldSize); i++) {
+			for (int j = 0; j < (worldSize); j++) {
+				if (	   PerlinNoise.perlin((float) i /30+seedOffset, (float) j /30+seedOffset) < -0.2){
 					grid[i][j]= new Block(Texture.WATER);
-				} else if (PerlinNoise.perlin((float) i /20, (float) j /20) < -0.1) {
+				} else if (PerlinNoise.perlin((float) i /30+seedOffset, (float) j /30+seedOffset) < -0.1) {
 					grid[i][j]= new Block(Texture.SAND);
-				} else if (PerlinNoise.perlin((float) i /20, (float) j /20) < 0.1) {
+				} else if (PerlinNoise.perlin((float) i /30+seedOffset, (float) j /30+seedOffset) < 0.1) {
 					grid[i][j]= new Block(Texture.GRASS);
-				} else if (PerlinNoise.perlin((float) i /20, (float) j /20) < 0.5) {
+				} else if (PerlinNoise.perlin((float) i /30+seedOffset, (float) j /30+seedOffset) < 0.5) {
 					grid[i][j]= new Block(Texture.STONE);
-				} else if (PerlinNoise.perlin((float) i /20, (float) j /20) < 1) {
+				} else if (PerlinNoise.perlin((float) i /30+seedOffset, (float) j /30+seedOffset) < 1) {
 					grid[i][j]= new Block(Texture.SNOW);
 				}
 
@@ -58,11 +80,17 @@ public class MainClass extends ApplicationAdapter{
 
 		displayGrid();
 
+        batch.begin();
+        font.setColor(Color.RED);
+
+        font.draw(batch, String.valueOf(gridSize), 0, 800);
+        font.draw(batch, String.valueOf((800/gridSize)*(800/gridSize))+" V", 150, 800);
+        batch.end();
+
 	}
 	
 	@Override
 	public void dispose () {
-
 
 	}
 	public void displayGrid() {
@@ -81,6 +109,8 @@ public class MainClass extends ApplicationAdapter{
 			}
 
 		}
+        painter.setColor(Color.BLACK);
+        painter.rect(0,700,800,100);
 		painter.end();
 	}
 	public void handleInputs() {
@@ -90,22 +120,20 @@ public class MainClass extends ApplicationAdapter{
 
 		if (Gdx.input.isKeyJustPressed(Input.Keys.P)) gridSize+=1;
 
-
-
-
 		if (gridSize!=1){
-			if (offsetx+(800/(gridSize-1))<999) {
-				if (offsety+(800/(gridSize-1))<999) {
+			if (offsetx+(800/(gridSize-1))<worldSize) {
+				if (offsety+(800/(gridSize-1))<worldSize) {
 					if (Gdx.input.isKeyJustPressed(Input.Keys.O)) gridSize-=1;
 				}
 
 			}
 
 		}
-		if (800/gridSize+offsetx<997) {
+
+			if (800/gridSize+offsetx<=worldSize-2) {
 			if (Gdx.input.isKeyPressed(Input.Keys.D)) offsetx+=2;
 		}
-		if (800/gridSize+offsety<997) {
+		if (800/gridSize+offsety<=worldSize-2) {
 			if (Gdx.input.isKeyPressed(Input.Keys.W)) offsety+=2;
 		}
 
@@ -117,9 +145,4 @@ public class MainClass extends ApplicationAdapter{
 			if (Gdx.input.isKeyPressed(Input.Keys.S)) offsety-=2;
 		}
 	}
-
-
-
-
-
 }
